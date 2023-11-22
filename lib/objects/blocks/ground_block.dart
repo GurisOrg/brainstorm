@@ -26,7 +26,16 @@ class GroundBlock extends SpriteComponent with HasGameRef<EmberQuestGame> {
       gridPosition.x * size.x + xOffset,
       game.size.y - gridPosition.y * size.y,
     );
-    add(RectangleHitbox(collisionType: CollisionType.passive));
+
+    // Set hitbox size to match GroundBlock size
+    add(
+      RectangleHitbox(
+        size: size,
+        anchor: Anchor.topLeft,
+        collisionType: CollisionType.passive,
+      ),
+    );
+
     if (gridPosition.x == 9 && position.x > game.lastBlockXPosition) {
       game.lastBlockKey = _blockKey;
       game.lastBlockXPosition = position.x + size.x;
