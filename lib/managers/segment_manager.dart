@@ -21,9 +21,9 @@ final segment0 = [
   Block(Vector2(1, 0), GroundBlock),
   Block(Vector2(2, 0), GroundBlock),
   Block(Vector2(3, 0), GroundBlock),
-  Block(Vector2(4, 1), GroundBlock),
-  Block(Vector2(5, 1), GroundBlock),
-  Block(Vector2(6, 1), GroundBlock),
+  // Block(Vector2(4, 1), GroundBlock),
+  // Block(Vector2(5, 1), GroundBlock),
+  // Block(Vector2(6, 1), GroundBlock),
   Block(Vector2(8, 3), Star),
 ];
 

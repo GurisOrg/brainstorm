@@ -3,19 +3,18 @@ import 'package:brainstorm/objects/blocks/ground_block.dart';
 import 'package:brainstorm/objects/star/star.dart';
 import 'package:brainstorm/player.dart';
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
-import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 
-class EmberQuestGame extends FlameGame
+class EmberQuestGame extends Forge2DGame
     with HasCollisionDetection, HasKeyboardHandlerComponents {
   EmberQuestGame();
-  @override
-  bool debugMode = true;
+  // @override
+  // bool debugMode = true;
 
   @override
-  final world = World();
+  final world = Forge2DWorld(gravity: Vector2(0, 30.0));
   late final CameraComponent cameraComponent;
 
   late EmberPlayer _player;
@@ -41,7 +40,6 @@ class EmberQuestGame extends FlameGame
       'player.png',
       'star.png',
     ]);
-    Flame.device.fullScreen();
 
     cameraComponent = CameraComponent(world: world);
     // Everything in this tutorial assumes that the position
@@ -67,6 +65,7 @@ class EmberQuestGame extends FlameGame
 
     _player = EmberPlayer(
       position: Vector2(128, canvasSize.y - 128),
+      size: Vector2(64, 64),
     );
     world.add(_player);
   }
@@ -93,7 +92,7 @@ class EmberQuestGame extends FlameGame
       switch (block.blockType) {
         case GroundBlock:
           final gBlock = GroundBlock(
-            gridPosition: block.gridPosition,
+            position: block.gridPosition,
             xOffset: xPositionOffset,
           );
           componentsToRemove.add(gBlock);
