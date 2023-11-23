@@ -1,7 +1,10 @@
+import 'package:brainstorm/mixins/has_ground_contact.dart';
+import 'package:brainstorm/mixins/sprite.dart';
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/material.dart';
 
-class GroundBlock extends BodyComponent {
+class GroundBlock extends BodyComponent with ContactCallbacks, SpriteMixin {
   GroundBlock({
     required this.position,
     required this.xOffset,
@@ -15,20 +18,15 @@ class GroundBlock extends BodyComponent {
   final Vector2 size = Vector2.all(64);
 
   @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-    final sprite = await game.loadSprite('block.png');
-    // renderBody = false;
+  String get spriteName => 'block.png';
 
-    add(
-      SpriteComponent(
-        sprite: sprite,
-        size: size,
-        anchor: Anchor.bottomLeft,
-      ),
-    );
-  }
+  @override
+  Vector2 get spriteSize => size;
 
+  @override
+  Anchor get spriteAnchor => Anchor.bottomLeft;
+
+  @mustCallSuper
   @override
   Body createBody() {
     _finalPosition = Vector2(
@@ -56,61 +54,22 @@ class GroundBlock extends BodyComponent {
     return world.createBody(bodyDef)..createFixture(fixtureDef);
   }
 
-  // final Vector2 gridPosition;
-  // double xOffset;
+  @mustCallSuper
+  @override
+  void beginContact(Object other, Contact contact) {
+    // stops the other object from falling (y down)
+    if (other is HasGroundContact) {
+      other.onGround = true;
+    }
+    super.beginContact(other, contact);
+  }
 
-  // final UniqueKey _blockKey = UniqueKey();
-  // final Vector2 velocity = Vector2.zero();
-
-  // GroundBlock({
-  //   required this.gridPosition,
-  //   required this.xOffset,
-  // }) : super(size: Vector2.all(64), anchor: Anchor.bottomLeft);
-
-  // @override
-  // void onLoad() {
-  //   final groundImage = game.images.fromCache('block.png');
-  //   sprite = Sprite(groundImage);
-  //   position = Vector2(
-  //     gridPosition.x * size.x + xOffset,
-  //     game.size.y - gridPosition.y * size.y,
-  //   );
-
-  //   // Set hitbox size to match GroundBlock size
-  //   add(
-  //     RectangleHitbox(
-  //       size: size,
-  //       anchor: Anchor.topLeft,
-  //       collisionType: CollisionType.passive,
-  //     ),
-  //   );
-
-  //   if (gridPosition.x == 9 && position.x > game.lastBlockXPosition) {
-  //     game.lastBlockKey = _blockKey;
-  //     game.lastBlockXPosition = position.x + size.x;
-  //   }
-  // }
-
-  // @override
-  // void update(double dt) {
-  //   velocity.x = game.objectSpeed;
-  //   position += velocity * dt;
-
-  //   if (position.x < -size.x) {
-  //     removeFromParent();
-  //     if (gridPosition.x == 0) {
-  //       game.loadGameSegments(
-  //         Random().nextInt(segments.length),
-  //         game.lastBlockXPosition,
-  //       );
-  //     }
-  //   }
-  //   if (gridPosition.x == 9) {
-  //     if (game.lastBlockKey == _blockKey) {
-  //       game.lastBlockXPosition = position.x + size.x - 10;
-  //     }
-  //   }
-
-  //   super.update(dt);
-  // }
+  @mustCallSuper
+  @override
+  void endContact(Object other, Contact contact) {
+    if (other is HasGroundContact) {
+      other.onGround = false;
+    }
+    super.endContact(other, contact);
+  }
 }

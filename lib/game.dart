@@ -3,21 +3,21 @@ import 'package:brainstorm/objects/blocks/ground_block.dart';
 import 'package:brainstorm/objects/star/star.dart';
 import 'package:brainstorm/player.dart';
 import 'package:flame/components.dart';
-import 'package:flame/input.dart';
+import 'package:flame/events.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 
 class EmberQuestGame extends Forge2DGame
     with HasCollisionDetection, HasKeyboardHandlerComponents {
   EmberQuestGame();
-  // @override
-  // bool debugMode = true;
+  @override
+  bool debugMode = true;
 
   @override
-  final world = Forge2DWorld(gravity: Vector2(0, 30.0));
+  final world = Forge2DWorld(gravity: Vector2(0, 10.0));
   late final CameraComponent cameraComponent;
 
-  late EmberPlayer _player;
+  late Player _player;
   double objectSpeed = 0.0;
 
   late double lastBlockXPosition = 0.0;
@@ -63,7 +63,7 @@ class EmberQuestGame extends Forge2DGame
       loadGameSegments(i, i * 640);
     }
 
-    _player = EmberPlayer(
+    _player = Player(
       position: Vector2(128, canvasSize.y - 128),
       size: Vector2(64, 64),
     );
